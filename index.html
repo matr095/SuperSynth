@@ -1,0 +1,228 @@
+<meta charset="UTF-8">
+<title>Super synthé !</title>
+<style type="text/css">
+    body {
+        font-family: "Arial", "sans-serif";
+        background: #112244;
+        color: white;
+        padding-top: 15px;
+        padding-left: 15px;
+    }
+    h1 {
+        color: yellow;
+    }
+    h2 {
+        color: red;
+    }
+</style>
+
+<h1>Super synthé</h1>
+<hr>
+
+<h2>Oscilateurs</h2>
+<p id="type1">Sinusoïde</p>
+<p id="type2">Carré</p>
+<p id="type3">Saw</p>
+<p id="type4">Triangle</p>
+
+<h2>Filtre</h2>
+<p id="soft">Doux</p>
+<p id="med">Medium</p>
+<p id="bright">Brillant</p>
+
+<h2>LFO</h2>
+<p id="ya">Oui</p>
+<p id="now">Non</p>
+
+<h2>Enveloppe (Release)</h2>
+<p id="court">300 ms</p>
+<p id="long">1 s</p>
+<hr>
+<h2>Clavier</h2>
+<span id="do4">[_]</span>
+<span id="reb4">[|]</span>
+<span id="re4">[_]</span>
+<span id="mib4">[|]</span>
+<span id="mi4">[_]</span>
+<span id="fa4">[_]</span>
+<span id="solb4">[|]</span>
+<span id="sol4">[_]</span>
+<span id="lab4">[|]</span>
+<span id="la4">[_]</span>
+<span id="sib4">[|]</span>
+<span id="si4">[_]</span>
+<span id="do5">[_]</span>
+<p>AZERTYUIOPQSD: De Do4 à Do5</p>
+
+<script>
+
+var type = 'sine';
+var filtre = 'allpass'
+var bass = 0
+var release = 0.3;
+
+document.querySelector("#type1").addEventListener('click', function() {
+    type = 'sine'
+    console.log(type)
+})
+document.querySelector("#type2").addEventListener('click', function() {
+    type = 'square'
+    console.log(type)
+})
+document.querySelector("#type3").addEventListener('click', function() {
+    type = 'saw'
+    console.log(type)
+})
+document.querySelector("#type4").addEventListener('click', function() {
+    type = 'triangle'
+    console.log(type)
+})
+
+document.querySelector("#ya").addEventListener('click', function() {
+    bass = 110
+    console.log(type)
+})
+document.querySelector("#now").addEventListener('click', function() {
+    bass = 0
+    console.log(type)
+})
+
+document.querySelector("#soft").addEventListener('click', function() {
+    filtre = "lowpass"
+    console.log(filtre)
+})
+
+document.querySelector("#med").addEventListener('click', function() {
+    filtre = "allpass"
+    console.log(filtre)
+})
+
+document.querySelector("#bright").addEventListener('click', function() {
+    filtre = 'highpass'
+    console.log(filtre)
+})
+
+document.querySelector("#court").addEventListener('click', function() {
+    release = 0.3
+    console.log(filtre)
+})
+
+document.querySelector("#long").addEventListener('click', function() {
+    release = 1
+    console.log(filtre)
+})
+
+function playnote(freq) {
+    var context = new (window.AudioContext || window.webkitAudioContext)();
+    var contextlfo = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = context.createOscillator();
+    var lfo = contextlfo.createOscillator();
+    lfo.type = type
+    lfo.frequency.value = bass
+    var filter = context.createBiquadFilter();
+    filter.type = filtre
+    filter.frequency = 440
+    filter.gain.value = 1000
+    osc.connect(filter)
+    osc.type = type
+    osc.frequency.value = freq;
+    lfo.connect(contextlfo.destination)
+    filter.connect(context.destination)
+    osc.start()
+    lfo.start()
+    osc.stop(context.currentTime + release)
+    lfo.stop(context.currentTime + release)
+    setTimeout(function() {
+        context.close()
+        contextlfo.close()
+    }, 1000)
+}
+
+document.querySelector("#do4").addEventListener('click', function() {
+    playnote(261)    
+})
+document.querySelector("#reb4").addEventListener('click', function() {
+    playnote(277)    
+})
+document.querySelector("#re4").addEventListener('click', function() {
+    playnote(293)    
+})
+document.querySelector("#mib4").addEventListener('click', function() {
+    playnote(311)    
+})
+document.querySelector("#mi4").addEventListener('click', function() {
+    playnote(329)    
+})
+//......
+document.querySelector("#fa4").addEventListener('click', function() {
+    playnote(349)    
+})
+document.querySelector("#solb4").addEventListener('click', function() {
+    playnote(369)    
+})
+document.querySelector("#sol4").addEventListener('click', function() {
+    playnote(392)    
+})
+document.querySelector("#lab4").addEventListener('click', function() {
+    playnote(415)    
+})
+document.querySelector("#la4").addEventListener('click', function() {
+    playnote(440)    
+})
+document.querySelector("#sib4").addEventListener('click', function() {
+    playnote(466)    
+})
+document.querySelector("#si4").addEventListener('click', function() {
+    playnote(493)    
+})
+document.querySelector("#do5").addEventListener('click', function() {
+    playnote(523)    
+})
+
+window.addEventListener('keydown', function(e) {
+    switch (e.keyCode) {
+        case 65:
+            playnote(261)   
+            break;
+        case 90:
+            playnote(277)   
+            break;
+        case 69:
+            playnote(293)   
+            break;
+        case 82:
+            playnote(311)   
+            break;
+        case 84:
+            playnote(329)   
+            break;
+        case 89:
+            playnote(349)   
+            break;
+        case 85:
+            playnote(369)   
+            break;
+        case 73:
+            playnote(392)   
+            break;
+        case 79:
+            playnote(415)   
+            break;
+        case 80:
+            playnote(440)   
+            break;
+        case 81:
+            playnote(466)   
+            break;
+        case 83:
+            playnote(493)   
+            break;
+        case 68:
+            playnote(523)   
+            break;
+    }
+})
+
+</script>
+
+<hr>Créé par MatR
